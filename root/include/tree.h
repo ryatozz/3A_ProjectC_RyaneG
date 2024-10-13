@@ -24,6 +24,7 @@ db_entry *tree_search_node(tree_node *node, char *clé);
 void tree_free();
 void tree_free_node(tree_node *node);
 
+void tree_print_in_order(tree_node *node); 
 // Declaration of tree_delete function
 void tree_delete(char *clé);
 

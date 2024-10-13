@@ -84,13 +84,10 @@ void tree_free_node(tree_node *node) {
 // Fonction pour supprimer une entrée de l'arbre binaire
 void tree_delete(char *clé) {
     tree_root = tree_delete_node(tree_root, clé);
-
-
 }
 
 // Fonction pour supprimer un nœud dans l'arbre binaire
-tree_node *tree_delete_node(tree_node *node, char *clé) 
- {
+tree_node *tree_delete_node(tree_node *node, char *clé) {
     if (node == NULL) {
         return NULL; // La clé n'existe pas
     }
@@ -135,4 +132,39 @@ tree_node *tree_delete_node(tree_node *node, char *clé)
     }
 
     return node;
+}
+
+void tree_save_in_order(tree_node *node, FILE *file) {
+    if (node == NULL) {
+        return;
+    }
+
+    tree_save_in_order(node->gauche, file);  // Parcourir le sous-arbre gauche
+    fprintf(file, "%s,%s\n", node->entry->clé, node->entry->valeur);  // Écrire clé,valeur dans le fichier
+    tree_save_in_order(node->droite, file);  // Parcourir le sous-arbre droit
+}
+
+
+
+// Fonction pour charger une entrée clé-valeur à partir d'une ligne de fichier
+void tree_load_entry(char *line) {
+    char *clé = strtok(line, "=");
+    char *valeur = strtok(NULL, "\n");
+    if (clé != NULL && valeur != NULL) {
+        db_entry *entry = malloc(sizeof(db_entry));
+        entry->clé = strdup(clé);
+        entry->valeur = strdup(valeur);
+        tree_insert(entry);  // Insère l'entrée dans l'arbre
+        db_save_to_disk("database.txt");
+    }
+}
+
+void tree_print_in_order(tree_node *node) {
+    if (node == NULL) {
+        return;
+    }
+
+    tree_print_in_order(node->gauche);  // Parcourir le sous-arbre gauche
+    printf("Clé: %s, Valeur: %s\n", node->entry->clé, node->entry->valeur);  // Afficher la clé-valeur
+    tree_print_in_order(node->droite);  // Parcourir le sous-arbre droit
 }
